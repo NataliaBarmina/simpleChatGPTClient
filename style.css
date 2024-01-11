@@ -105,7 +105,7 @@ h6 {
     align-items: end;
 }
 
-.allReply,
+.js-singleMessage,
 .textarea {
     width: 55rem;
     border: 1px solid grey;
@@ -143,6 +143,6 @@ h6 {
     background-color: aquamarine;
 }
 
-.allReply {
+.js-singleMessage {
     background-color: yellowgreen;
 }

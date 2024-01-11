@@ -14,6 +14,7 @@
         <div id="cont" class="container">
             <textarea class="textarea" placeholder="Enter Prompt" required></textarea>
             <input class="submit" type="button" value="Submit">
+            <div class="dialog"></div>
         </div>
     </form>
 
@@ -31,7 +32,7 @@
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": "Bearer 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"
+                        "Authorization": "Bearer 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"
                     },
                     body: JSON.stringify({
                         "model": "gpt-3.5-turbo",
@@ -59,16 +60,18 @@
         }
 
         function addPromptsToLayout(arr) {
+            const container = document.querySelector('.dialog');
 
-            const generalContainer = document.createElement('div');
-            generalContainer.className = 'allReply';
-            cont.append(generalContainer);
-            const allReply = document.querySelector('.allReply');
+            const singleMessage = document.createElement('div');
+            singleMessage.className = 'js-singleMessage';
 
             for (let i = 0; i < arr.length; i += 1) {
-                generalContainer.innerHTML = `<p class = 'word'>Prompt:</p><p class ='value'>${arr[i].question}</p><p class = 'word'>Response:</p><p class ='value'>${arr[i].answer}</p>`;
+                singleMessage.innerHTML = `<p class = 'word'>Prompt:</p><p class ='value'>${arr[i].question}</p><p class = 'word'>Response:</p><p class ='value'>${arr[i].answer}</p>`;
             }
+
+            container.prepend(singleMessage);
         }
+
     </script>
 </body>
 
