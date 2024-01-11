@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <form>
+        <p class="header">Fun with AI</p>
+        <div id="cont" class="container">
+            <textarea class="textarea" placeholder="Enter Prompt" required></textarea>
+            <input class="submit" type="button" value="Submit">
+        </div>
+    </form>
+
+    <script>
+        const arr = [];
+
+        const trigger = document.querySelector('.submit');
+        trigger.addEventListener('click', sendPrompt);
+
+        async function sendPrompt() {
+            const prompt = document.querySelector('.textarea').value;
+
+            try {
+                const response = await fetch("https://api.openai.com/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer sk-f51PC"
+                    },
+                    body: JSON.stringify({
+                        "model": "gpt-3.5-turbo",
+                        "messages": [{ "role": "user", "content": prompt }],
+                        "temperature": 0.7
+                    })
+                });
+                const data = await response.json();
+                const reply = await data.choices[0].message.content;
+
+                createObject(prompt, reply);
+                console.log(arr);
+
+                for (let i = 0; i < arr.length; i += 1) {
+                    // надо вводить проверку - если нет элемента с таким вопросом - вызываем функцию???
+                    addPromptsToLayout(arr[i].answer, arr[i].question);
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function createObject(prompt, reply) {
+            const object = {
+                question: prompt,
+                answer: reply,
+            }
+            arr.unshift(object);
+        }
+
+        function addPromptsToLayout(a, q) {
+            // общий контейнер
+            const generalContainer = document.createElement('div');
+            generalContainer.className = 'allReply';
+            cont.append(generalContainer);
+
+            generalContainer.innerHTML = `<div class = 'question'><p class = 'word'>Prompt</p><p class ='value'>${q}</p></div><div class = 'answer'><p class = 'word'>Response</p><p class ='value'>${a}</p></div>`;
+        }
+
+    </script>
+</body>
+
+</html>
