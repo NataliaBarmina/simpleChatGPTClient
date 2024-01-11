@@ -126,17 +126,23 @@ h6 {
     margin-bottom: 2rem;
 }
 
-.question {
-    margin-bottom: 2rem;
-}
-
 .word {
     width: 20%;
     display: inline-block;
     font-weight: 800;
+    vertical-align: top;
 }
 
 .value {
     width: 80%;
     display: inline-block;
+    margin-bottom: 2rem;
+}
+
+.replyContainer {
+    background-color: aquamarine;
+}
+
+.allReply {
+    background-color: yellowgreen;
 }
