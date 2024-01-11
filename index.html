@@ -46,7 +46,7 @@
                 console.log(arr);
 
                 for (let i = 0; i < arr.length; i += 1) {
-                    // надо вводить проверку - если нет элемента с таким вопросом - вызываем функцию???
+                    // надо вводить проверку - если нет элемента с таким вопросом - вызываем функцию
                     addPromptsToLayout(arr[i].answer, arr[i].question);
                 }
 
@@ -64,7 +64,7 @@
         }
 
         function addPromptsToLayout(a, q) {
-            // общий контейнер
+
             const generalContainer = document.createElement('div');
             generalContainer.className = 'allReply';
             cont.append(generalContainer);
