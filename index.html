@@ -56,7 +56,12 @@
                 question: prompt,
                 answer: reply,
             }
-            arr.push(object);
+            // переводим объект в строчный вид
+            const objectJson = JSON.stringify(object);
+            // сoздаем sessionStorage
+            const storageForObject = sessionStorage.setItem('key', objectJson);
+            console.log(storageForObject);
+            arr.push(storageForObject);
         }
 
         function addPromptsToLayout(arr) {
@@ -66,7 +71,11 @@
             singleMessage.className = 'js-singleMessage';
 
             for (let i = 0; i < arr.length; i += 1) {
-                singleMessage.innerHTML = `<p class = 'word'>Prompt:</p><p class ='value'>${arr[i].question}</p><p class = 'word'>Response:</p><p class ='value'>${arr[i].answer}</p>`;
+
+                const data = sessionStorage.getItem('key');
+                const a = JSON.parse(data);
+
+                singleMessage.innerHTML = `<p class = 'word'>Prompt:</p><p class ='value'>${a.question}</p><p class = 'word'>Response:</p><p class ='value'>${a.answer}</p>`;
             }
 
             container.prepend(singleMessage);
