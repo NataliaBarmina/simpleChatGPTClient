@@ -19,7 +19,8 @@
     </form>
 
     <script>
-        const arr = [];
+        // создаем массив или получаем массив из localStorage
+        const arr = JSON.parse(localStorage.getItem('key')) || [];
 
         const trigger = document.querySelector('.submit');
         trigger.addEventListener('click', sendPrompt);
@@ -32,7 +33,7 @@
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": "Bearer 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"
+                        "Authorization": "Bearer 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"
                     },
 
                     body: JSON.stringify({
@@ -45,7 +46,11 @@
                 const reply = await data.choices[0].message.content;
 
                 createObject(prompt, reply);
-                addPromptsToLayout(arr);
+
+                // переводим массив в строчный вид и сoздаем localStorage
+                localStorage.setItem('key', JSON.stringify(arr));
+
+                addPromptsToLayout();
 
             } catch (error) {
                 console.error('Error:', error);
@@ -57,30 +62,36 @@
                 question: prompt,
                 answer: reply,
             }
-            // переводим объект в строчный вид
-            const objectJson = JSON.stringify(object);
-            // сoздаем sessionStorage
-            const storageForObject = sessionStorage.setItem('key', objectJson);
-            console.log(storageForObject);
-            arr.push(storageForObject);
+            arr.push(object);
         }
 
-        function addPromptsToLayout(arr) {
-            const container = document.querySelector('.dialog');
+        const container = document.querySelector('.dialog');
+
+        function addPromptsToLayout() {
 
             const singleMessage = document.createElement('div');
             singleMessage.className = 'js-singleMessage';
 
             for (let i = 0; i < arr.length; i += 1) {
-
-                const data = sessionStorage.getItem('key');
-                const a = JSON.parse(data);
-
-                singleMessage.innerHTML = `<p class = 'word'>Prompt:</p><p class ='value'>${a.question}</p><p class = 'word'>Response:</p><p class ='value'>${a.answer}</p>`;
+                singleMessage.innerHTML = `<p class = 'word'>Prompt:</p><p class ='value'>${arr[i].question}</p><p class = 'word'>Response:</p><p class ='value'>${arr[i].answer}</p>`;
             }
-
             container.prepend(singleMessage);
         }
+
+        function showLayoutBeforeReboot() {
+
+            for (let i = arr.length - 1; i >= 0; i -= 1) {
+
+                const singleMessage = document.createElement('div');
+                singleMessage.className = 'js-singleMessage';
+
+                singleMessage.innerHTML = `<p class = 'word'>Prompt:</p><p class ='value'>${arr[i].question}</p><p class = 'word'>Response:</p><p class ='value'>${arr[i].answer}</p>`;
+
+                container.append(singleMessage);
+            }
+        }
+        showLayoutBeforeReboot();
+
 
     </script>
 </body>
