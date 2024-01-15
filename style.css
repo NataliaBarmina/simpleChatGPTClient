@@ -106,7 +106,8 @@ h6 {
 }
 
 .js-singleMessage,
-.textarea {
+.textarea,
+.choiceOfResponseStyle {
     width: 55rem;
     border: 1px solid grey;
     border-radius: 10px;
@@ -114,6 +115,26 @@ h6 {
     padding: 1rem;
     font-size: 1.4rem;
     background-color: rgb(226, 247, 240);
+    padding: 2rem;
+}
+
+h1 {
+    padding-bottom: 2rem;
+}
+
+.styleAnswer {
+    display: block;
+    padding-bottom: 1rem;
+}
+
+.valueOfStyleAnswer {
+    padding-left: 1rem;
+}
+
+.valueOfUserStyleAnswer {
+    padding-left: 1rem;
+    background-color: rgb(226, 247, 240);
+    font-size: 1.4rem;
 }
 
 .submit {
