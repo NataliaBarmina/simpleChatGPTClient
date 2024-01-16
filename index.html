@@ -17,22 +17,22 @@
             <div class="choiceOfResponseStyle">
                 <h1>ВЫБЕРИТЕ ВАРИАНТЫ СТИЛЯ ОТВЕТА</h1>
                 <label class='styleAnswer'>
-                    <input type="radio" name='styleAnswer' value='Пьяный грузчик'><span
-                        class="valueOfStyleAnswer">Пьяный грузчик</span>
+                    <input class='js-styleAnswer' type="radio" name='styleAnswer' value='Браток из 90-х'><span
+                        class="valueOfStyleAnswer">Браток из 90-х</span>
                 </label>
                 <label class='styleAnswer'>
-                    <input type="radio" name='styleAnswer' value='Профессор философии'><span
+                    <input class='js-styleAnswer' type="radio" name='styleAnswer' value='Профессор философии'><span
                         class="valueOfStyleAnswer">Профессор философии</span>
                 </label>
                 <label class='styleAnswer'>
-                    <input type="radio" name='styleAnswer' value='Есенин, в стихах'><span
+                    <input class='js-styleAnswer' type="radio" name='styleAnswer' value='Есенин, в стихах'><span
                         class="valueOfStyleAnswer">Есенин, в стихах</span>
                 </label>
                 <label class='styleAnswer'>
-                    <input type="radio" name='styleAnswer' value='Stand-up комик'><span
+                    <input class='js-styleAnswer' type="radio" name='styleAnswer' value='Stand-up комик'><span
                         class="valueOfStyleAnswer">Stand-up комик</span>
                 </label>
-                <label class='styleAnswer'>
+                <label class='js'>
                     <input class="js-valueOfUserStyleAnswer" type="radio" name='styleAnswer'><label><input
                             class="valueOfUserStyleAnswer" type="text" placeholder="Введите свой тест"></label>
                 </label>
@@ -44,6 +44,26 @@
 
     <script>
 
+        const y = document.querySelector('.valueOfStyleAnswer').textContent;
+        const selfSelectButton = document.querySelector('.js');
+
+        selfSelectButton.addEventListener('change', (event) => {
+            role = document.querySelector('.valueOfUserStyleAnswer').value;
+
+            if (role === "") alert('заполните поле выбора стиля ответа');
+        })
+
+        const triggersRadio = document.querySelectorAll('.styleAnswer');
+        const l = document.querySelector('.valueOfUserStyleAnswer').value;
+
+        const b = document.querySelectorAll('.js-styleAnswer');
+
+        for (let i = 0; i < triggersRadio.length; i += 1) {
+            triggersRadio[i].addEventListener('change', () => {
+                role = b[i].attributes.value.value;
+            })
+        }
+
         // создаем массив или получаем массив из localStorage
         const arr = JSON.parse(localStorage.getItem('key')) || [];
 
@@ -52,20 +72,13 @@
 
         async function sendPrompt() {
 
-            // добавляем аттрибут value в поле самостоятельного назначения пользователем стиля ответа
-            const c = document.querySelector('.js-valueOfUserStyleAnswer');
-            const a = document.querySelector('.valueOfUserStyleAnswer').value;
-
-            c.setAttribute('value', `${a}`);
-
-            // находим значение аттрибута value
-            const b = document.querySelector('.js-valueOfUserStyleAnswer').attributes.value.value;
-
-
             const p = document.querySelector('.textarea').value;
-            const prompt = `${p}.Дай ответ как ${b}`;
-            console.log(b);
+            const prompt = `${p}.Дай ответ как ${role}`;
+
+            console.log(`стиль: ${role}`);
             console.log(prompt);
+
+            debugger
 
             try {
                 const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -90,10 +103,6 @@
                 localStorage.setItem('key', JSON.stringify(arr));
 
                 addPromptsToLayout();
-
-
-                debugger
-
 
             } catch (error) {
                 console.error('Error:', error);
@@ -134,8 +143,6 @@
             }
         }
         showLayoutBeforeReboot();
-
-
     </script>
 </body>
 
