@@ -17,25 +17,31 @@
             <div class="choiceOfResponseStyle">
                 <h1>ВЫБЕРИТЕ ВАРИАНТЫ СТИЛЯ ОТВЕТА</h1>
                 <label class='styleAnswer'>
-                    <input class='js-styleAnswer' type="radio" name='styleAnswer' value='Браток из 90-х'><span
-                        class="valueOfStyleAnswer">Браток из 90-х</span>
+                    <input class='js-styleAnswer' type="radio" name='name'><span class="valueOfStyleAnswer">Браток из
+                        90-х</span>
                 </label>
                 <label class='styleAnswer'>
-                    <input class='js-styleAnswer' type="radio" name='styleAnswer' value='Профессор философии'><span
-                        class="valueOfStyleAnswer">Профессор философии</span>
+                    <input class='js-styleAnswer' type="radio" name='name'><span class="valueOfStyleAnswer">Профессор
+                        философии</span>
                 </label>
                 <label class='styleAnswer'>
-                    <input class='js-styleAnswer' type="radio" name='styleAnswer' value='Есенин, в стихах'><span
-                        class="valueOfStyleAnswer">Есенин, в стихах</span>
+                    <input class='js-styleAnswer' type="radio" name='name'><span class="valueOfStyleAnswer">Есенин, в
+                        стихах</span>
                 </label>
                 <label class='styleAnswer'>
-                    <input class='js-styleAnswer' type="radio" name='styleAnswer' value='Stand-up комик'><span
-                        class="valueOfStyleAnswer">Stand-up комик</span>
+                    <input class='js-styleAnswer' type="radio" name='name'><span class="valueOfStyleAnswer">Stand-up
+                        комик</span>
                 </label>
-                <label class='js'>
-                    <input class="js-valueOfUserStyleAnswer" type="radio" name='styleAnswer'><label><input
-                            class="valueOfUserStyleAnswer" type="text" placeholder="Введите свой тест"></label>
+                <label class='styleAnswer'>
+                    <input class='js-styleAnswer' type="radio" name='name'><span class="valueOfStyleAnswer">Без стиля
+                    </span>
                 </label>
+
+                <label class='userStyleAnswer'>
+                    <input type="radio" name='name'><label><input class="valueOfUserStyleAnswer" type="text"
+                            placeholder="Введите свой тест"></label>
+                </label>
+
             </div>
             <input class="submit" type="button" value="Отправить">
             <div class="dialog"></div>
@@ -44,23 +50,26 @@
 
     <script>
 
-        const y = document.querySelector('.valueOfStyleAnswer').textContent;
-        const selfSelectButton = document.querySelector('.js');
 
-        selfSelectButton.addEventListener('change', (event) => {
+        // объявляем глобальную переменную
+        let role = '';
+
+        // поле назначения пользователем стиля ответа
+        const triggerSelfSelect = document.querySelector('.userStyleAnswer');
+        triggerSelfSelect.addEventListener('change', getRoleFromSelfSelectField);
+
+        function getRoleFromSelfSelectField() {
             role = document.querySelector('.valueOfUserStyleAnswer').value;
-
             if (role === "") alert('заполните поле выбора стиля ответа');
-        })
+        }
 
+        // остальные  радио кнопки (кроме поля назначения пользователем стиля ответа)
         const triggersRadio = document.querySelectorAll('.styleAnswer');
-        const l = document.querySelector('.valueOfUserStyleAnswer').value;
-
-        const b = document.querySelectorAll('.js-styleAnswer');
+        const targetsRadio = document.querySelectorAll('.valueOfStyleAnswer');
 
         for (let i = 0; i < triggersRadio.length; i += 1) {
             triggersRadio[i].addEventListener('change', () => {
-                role = b[i].attributes.value.value;
+                role = targetsRadio[i].textContent
             })
         }
 
@@ -72,20 +81,23 @@
 
         async function sendPrompt() {
 
-            const p = document.querySelector('.textarea').value;
-            const prompt = `${p}.Дай ответ как ${role}`;
-
+            const valueOfTextArea = document.querySelector('.textarea').value;
             console.log(`стиль: ${role}`);
-            console.log(prompt);
+            console.log(valueOfTextArea);
 
-            debugger
+            if (role === targetsRadio[4].textContent || role === undefined || role === '') {
+                prompt = valueOfTextArea;
+            } else prompt = `${valueOfTextArea}.Дай ответ как ${role}`;
+
+            console.log(role);
+            console.log(prompt);
 
             try {
                 const response = await fetch("https://api.openai.com/v1/chat/completions", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": "Bearer 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"
+                        "Authorization": "Bearer "
                     },
 
                     body: JSON.stringify({
