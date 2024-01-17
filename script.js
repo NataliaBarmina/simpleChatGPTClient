@@ -1,8 +1,8 @@
 
-// объявляем глобальную переменную
+// объявляем глобальную переменную - стиль ответа
 let role = '';
 
-// поле назначения пользователем стиля ответа
+// событие на поле назначения пользователем стиля ответа
 const triggerSelfSelect = document.querySelector('.userStyleAnswer');
 triggerSelfSelect.addEventListener('change', getRoleFromSelfSelectField);
 
@@ -11,7 +11,7 @@ function getRoleFromSelfSelectField() {
     if (role === "") alert('заполните поле выбора стиля ответа');
 }
 
-// остальные  радио кнопки (кроме поля назначения пользователем стиля ответа)
+// событие на остальных радио кнопках (кроме поля назначения пользователем стиля ответа)
 const triggersRadio = document.querySelectorAll('.styleAnswer');
 const targetsRadio = document.querySelectorAll('.valueOfStyleAnswer');
 
@@ -24,21 +24,23 @@ for (let i = 0; i < triggersRadio.length; i += 1) {
 // создаем массив или получаем массив из localStorage
 const arr = JSON.parse(localStorage.getItem('key')) || [];
 
+
+// событие при нажатии на кнопку - отправление запроса
 const trigger = document.querySelector('.submit');
 trigger.addEventListener('click', sendPrompt);
 
 async function sendPrompt() {
 
     const valueOfTextArea = document.querySelector('.textarea').value;
-    console.log(`стиль: ${role}`);
-    console.log(valueOfTextArea);
+    const withoutStyle = document.querySelector('.js-withoutStyle').textContent;
 
-    if (role === targetsRadio[4].textContent || role === undefined || role === '') {
+    if (role === withoutStyle || role === undefined || role === '') {
         prompt = valueOfTextArea;
-    } else prompt = `${valueOfTextArea}.Дай ответ как ${role}`;
+    } else prompt = `${valueOfTextArea}. Дай ответ как ${role}`;
 
-    console.log(role);
-    console.log(prompt);
+    console.log(`стиль: ${role}`);
+    console.log(`question: ${valueOfTextArea}`);
+    console.log(`prompt: ${prompt}`);
 
     try {
         const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -63,12 +65,14 @@ async function sendPrompt() {
         localStorage.setItem('key', JSON.stringify(arr));
 
         addPromptsToLayout();
+        changeInput();
 
     } catch (error) {
         console.error('Error:', error);
     }
 }
 
+// создаем объект и пушим его в массив
 function createObject(prompt, reply) {
     const object = {
         question: prompt,
@@ -77,6 +81,7 @@ function createObject(prompt, reply) {
     arr.push(object);
 }
 
+// добавляем верстку для вопросов и ответов 
 const container = document.querySelector('.dialog');
 
 function addPromptsToLayout() {
@@ -90,6 +95,8 @@ function addPromptsToLayout() {
     container.prepend(singleMessage);
 }
 
+
+// добавляем верстку для элементов, сохраненных localStorage 
 function showLayoutBeforeReboot() {
 
     for (let i = arr.length - 1; i >= 0; i -= 1) {
@@ -103,3 +110,9 @@ function showLayoutBeforeReboot() {
     }
 }
 showLayoutBeforeReboot();
+
+// убираем назначенный пользователем стиль ответа
+function changeInput() {
+    const label = document.querySelector('.js-input');
+    label.innerHTML = "<input class = 'valueOfUserStyleAnswer' type= 'text' placeholder='Введите свой тест'>";
+}
