@@ -1,18 +1,30 @@
 
+
 // объявляем глобальную переменную - стиль ответа
 let role = '';
 
-// событие на поле назначения пользователем стиля ответа
-const triggerSelfSelect = document.querySelector('.userStyleAnswer');
-triggerSelfSelect.addEventListener('change', getRoleFromSelfSelectField);
+// делаем инпут активным при выборе радио кнопки
+const triggerOfUserStyleAnswer = document.querySelector('.js-radioSelfSelect');
+const targetOfUserStyleAnswer = document.querySelector('.valueOfUserStyleAnswer');
 
-function getRoleFromSelfSelectField() {
-    role = document.querySelector('.valueOfUserStyleAnswer').value;
-    if (role === "") alert('заполните поле выбора стиля ответа');
+triggerOfUserStyleAnswer.addEventListener('input', makeFieldActive);
+
+function makeFieldActive(event) {
+    if (event.target.checked) {
+        targetOfUserStyleAnswer.disabled = false;
+    }
 }
 
+// находим role при вводе пользователем своего значения 
+targetOfUserStyleAnswer.addEventListener('input', getRole);
+
+function getRole() {
+    role = targetOfUserStyleAnswer.value;
+}
+
+
 // событие на остальных радио кнопках (кроме поля назначения пользователем стиля ответа)
-const triggersRadio = document.querySelectorAll('.styleAnswer');
+const triggersRadio = document.querySelectorAll('.js-styleAnswer');
 const targetsRadio = document.querySelectorAll('.valueOfStyleAnswer');
 
 for (let i = 0; i < triggersRadio.length; i += 1) {
@@ -23,7 +35,6 @@ for (let i = 0; i < triggersRadio.length; i += 1) {
 
 // создаем массив или получаем массив из localStorage
 const arr = JSON.parse(localStorage.getItem('key')) || [];
-
 
 // событие при нажатии на кнопку - отправление запроса
 const trigger = document.querySelector('.submit');
@@ -41,6 +52,9 @@ async function sendPrompt() {
     console.log(`стиль: ${role}`);
     console.log(`question: ${valueOfTextArea}`);
     console.log(`prompt: ${prompt}`);
+
+    const a = targetOfUserStyleAnswer.value;
+    console.log(a);
 
     try {
         const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -66,6 +80,8 @@ async function sendPrompt() {
 
         addPromptsToLayout();
         changeInput();
+
+
 
     } catch (error) {
         console.error('Error:', error);
@@ -116,3 +132,5 @@ function changeInput() {
     const label = document.querySelector('.js-input');
     label.innerHTML = "<input class = 'valueOfUserStyleAnswer' type= 'text' placeholder='Введите свой тест'>";
 }
+
+
