@@ -1,5 +1,4 @@
 
-
 // объявляем глобальную переменную - стиль ответа
 let role = '';
 
@@ -7,13 +6,9 @@ let role = '';
 const triggerOfUserStyleAnswer = document.querySelector('.js-radioSelfSelect');
 const targetOfUserStyleAnswer = document.querySelector('.valueOfUserStyleAnswer');
 
-triggerOfUserStyleAnswer.addEventListener('input', makeFieldActive);
-
-function makeFieldActive(event) {
-    if (event.target.checked) {
-        targetOfUserStyleAnswer.disabled = false;
-    }
-}
+triggerOfUserStyleAnswer.addEventListener('change', () => {
+    targetOfUserStyleAnswer.disabled = false;
+})
 
 // находим role при вводе пользователем своего значения 
 targetOfUserStyleAnswer.addEventListener('input', getRole);
@@ -40,6 +35,7 @@ const arr = JSON.parse(localStorage.getItem('key')) || [];
 const trigger = document.querySelector('.submit');
 trigger.addEventListener('click', sendPrompt);
 
+
 async function sendPrompt() {
 
     const valueOfTextArea = document.querySelector('.textarea').value;
@@ -52,9 +48,6 @@ async function sendPrompt() {
     console.log(`стиль: ${role}`);
     console.log(`question: ${valueOfTextArea}`);
     console.log(`prompt: ${prompt}`);
-
-    const a = targetOfUserStyleAnswer.value;
-    console.log(a);
 
     try {
         const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -79,9 +72,9 @@ async function sendPrompt() {
         localStorage.setItem('key', JSON.stringify(arr));
 
         addPromptsToLayout();
-        changeInput();
-
-
+        resetInput();
+        resetChecked();
+        resetRole();
 
     } catch (error) {
         console.error('Error:', error);
@@ -127,10 +120,24 @@ function showLayoutBeforeReboot() {
 }
 showLayoutBeforeReboot();
 
+//! ПОСЛЕ ОТПРАВКИ ПРОМПТА УБИРАЕМ:
+
 // убираем назначенный пользователем стиль ответа
-function changeInput() {
+function resetInput() {
     const label = document.querySelector('.js-input');
-    label.innerHTML = "<input class = 'valueOfUserStyleAnswer' type= 'text' placeholder='Введите свой тест'>";
+    label.innerHTML = "<input class = 'valueOfUserStyleAnswer' type= 'text' placeholder='Введите свой тест' disabled='true'>";
 }
 
+// убираем выбор радиокнопки
+function resetChecked() {
+    const b = document.querySelectorAll('.js-radioButton');
 
+    for (let i = 0; i < b.length; i += 1) {
+        b[i].checked = false;
+    }
+}
+
+// убираем выбранный стиль ответа 
+function resetRole() {
+    role = '';
+}
