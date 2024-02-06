@@ -128,11 +128,11 @@ h1 {
     padding-bottom: 1rem;
 }
 
-.valueOfStyleAnswer {
+.js-preset-value-container {
     padding-left: 1rem;
 }
 
-.valueOfUserStyleAnswer {
+.js-custom-preset-input {
     padding-left: 1rem;
     background-color: rgb(226, 247, 240);
     font-size: 1.4rem;
