@@ -1,44 +1,64 @@
+const ELEMENTS = {
+    // создаем массив или получаем массив из localStorage
+    restoredMessages: JSON.parse(localStorage.getItem('key')) || [],
+
+    // радио кнопки
+    presetContainer: document.querySelector('.choiceOfResponseStyle'),
+    allRadioButtons: document.querySelectorAll('.js-radioButton'),
+    withoutStyle: document.querySelector('.js-withoutStyle').textContent,
+    customPresetRadioButton: document.querySelector('.js-custom-preset-option'),
+    labelForSelfAssignmentRole: document.querySelector('.js-input'),
+
+    //инпут
+    customPresetInput: document.querySelector('.js-custom-preset-input'),
+
+    // кнопка отправить форму
+    sendingPrompt: document.querySelector('.submit'),
+
+    // контейнер для верстки
+    container: document.querySelector('.dialog'),
+};
 
 // объявляем глобальную переменную - стиль ответа
 let role = '';
 
 // делаем инпут активным при выборе радио кнопки
-const customPresetRadioButton = document.querySelector('.js-custom-preset-option');
-const customPresetInput = document.querySelector('.js-custom-preset-input');
+(function initActiveInput() {
+    const { customPresetRadioButton, customPresetInput } = ELEMENTS;
 
-customPresetRadioButton.addEventListener('change', () => {
-    customPresetInput.disabled = false;
-})
+    customPresetRadioButton.addEventListener('change', () => {
+        customPresetInput.disabled = false;
+    })
+})();
 
 // находим role при вводе пользователем своего значения 
-customPresetInput.addEventListener('input', getRole);
-
-function getRole() {
-    role = customPresetInput.value;
-}
+(function initCustomersRole() {
+    const { customPresetInput } = ELEMENTS;
+    customPresetInput.addEventListener('input', () => {
+        role = customPresetInput.value;
+    })
+})();
 
 // событие на остальных радио кнопках (кроме поля назначения пользователем стиля ответа)
-const presetContainer = document.querySelector('.choiceOfResponseStyle');
-presetContainer.addEventListener('click', getRoleOnOtherRadioButton);
-
-function getRoleOnOtherRadioButton(event) {
-    let target = event.target;
-    if (!target.classList.contains('js-preset-option')) return;
-    role = target.nextSibling.textContent;
-}
-
-// создаем массив или получаем массив из localStorage
-const restoredMessages = JSON.parse(localStorage.getItem('key')) || [];
+(function initRoleOnOtherRadioButton() {
+    const { presetContainer } = ELEMENTS;
+    presetContainer.addEventListener('click', (event) => {
+        let target = event.target;
+        if (!target.classList.contains('js-preset-option')) return;
+        role = target.nextSibling.textContent;
+    })
+})();
 
 // событие при нажатии на кнопку - отправление запроса
-const trigger = document.querySelector('.submit');
-trigger.addEventListener('click', sendPrompt);
-
+(function initSendPrompt() {
+    const { sendingPrompt } = ELEMENTS;
+    sendingPrompt.addEventListener('click', sendPrompt);
+})();
 
 async function sendPrompt() {
+    const { withoutStyle, restoredMessages } = ELEMENTS;
 
     const rawPrompt = document.querySelector('.textarea').value;
-    const withoutStyle = document.querySelector('.js-withoutStyle').textContent;
     let prompt;
 
     if (role === withoutStyle || !role) {
@@ -50,7 +70,7 @@ async function sendPrompt() {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer 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"
+                "Authorization": "Bearer "
             },
 
             body: JSON.stringify({
@@ -61,6 +81,11 @@ async function sendPrompt() {
         });
         const data = await response.json();
         const reply = await data.choices[0].message.content;
+
+        //!!!!!!!!!! УДАЛИТЬ
+        console.log(`стиль: ${role}`);
+        console.log(`question: ${rawPrompt}`);
+        console.log(`prompt: ${prompt}`);
 
         createObject(prompt, reply);
 
@@ -78,6 +103,7 @@ async function sendPrompt() {
 }
 
 function createObject(prompt, reply) {
+    const { restoredMessages } = ELEMENTS;
     const object = {
         question: prompt,
         answer: reply,
@@ -86,10 +112,8 @@ function createObject(prompt, reply) {
 }
 
 // добавляем верстку для вопросов и ответов 
-const container = document.querySelector('.dialog');
-
 function addPromptsToLayout(arr) {
-
+    const { container } = ELEMENTS;
     const singleMessage = document.createElement('div');
     singleMessage.className = 'js-singleMessage';
 
@@ -101,38 +125,37 @@ function addPromptsToLayout(arr) {
 
 
 // добавляем верстку для элементов, сохраненных localStorage 
-function showLayoutBeforeReboot(arr) {
+(function showLayoutBeforeReboot() {
+    const { restoredMessages, container } = ELEMENTS;
 
-    for (let i = arr.length - 1; i >= 0; i -= 1) {
+    for (let i = restoredMessages.length - 1; i >= 0; i -= 1) {
 
         const singleMessage = document.createElement('div');
         singleMessage.className = 'js-singleMessage';
 
-        singleMessage.innerHTML = `<p class='word'>Prompt:</p><p class='value'>${arr[i].question}</p><p class='word'>Response:</p><p class='value'>${arr[i].answer}</p>`;
+        singleMessage.innerHTML = `<p class='word'>Prompt:</p><p class='value'>${restoredMessages[i].question}</p><p class='word'>Response:</p><p class='value'>${restoredMessages[i].answer}</p>`;
 
         container.append(singleMessage);
     }
-}
-showLayoutBeforeReboot(restoredMessages);
+})();
 
 //! ПОСЛЕ ОТПРАВКИ ПРОМПТА УБИРАЕМ:
 
-// убираем назначенный пользователем стиль ответа
+// назначенный пользователем стиль ответа
 function resetInput() {
-    const label = document.querySelector('.js-input');
-    label.innerHTML = "<input class = 'js-custom-preset-input' type= 'text' placeholder='Введите свой тест' disabled='true'>";
+    const { labelForSelfAssignmentRole } = ELEMENTS;
+    labelForSelfAssignmentRole.innerHTML = "<input class = 'js-custom-preset-input' type= 'text' placeholder='Введите свой тест' disabled='true'>";
 }
 
-// убираем выбор радиокнопки
+// выбор радиокнопки
 function resetChecked() {
-    const b = document.querySelectorAll('.js-radioButton');
-
-    for (let i = 0; i < b.length; i += 1) {
-        b[i].checked = false;
+    const { allRadioButtons } = ELEMENTS;
+    for (let i = 0; i < allRadioButtons.length; i += 1) {
+        allRadioButtons[i].checked = false;
     }
 }
 
-// убираем выбранный стиль ответа 
+// выбранный стиль ответа 
 function resetRole() {
     role = '';
 }
