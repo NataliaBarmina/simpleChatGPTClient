@@ -60,18 +60,15 @@ async function sendPrompt() {
     const { noPresetOption, restoredMessages } = ELEMENTS;
 
     const rawPrompt = document.querySelector('.textarea').value;
-    let prompt;
 
-    if (role === noPresetOption || !role) {
-        prompt = rawPrompt;
-    } else prompt = `${rawPrompt}. Дай ответ как ${role}`;
+    const prompt = (role === noPresetOption || !role) ? rawPrompt : `${rawPrompt}. Дай ответ как ${role}`;
 
     try {
         const response = await fetch("https://api.openai.com/v1/chat/completions", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer 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"
+                "Authorization": "Bearer "
             },
 
             body: JSON.stringify({
