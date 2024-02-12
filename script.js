@@ -1,3 +1,4 @@
+
 const ELEMENTS = {
     // создаем массив или получаем массив из localStorage
     restoredMessages: JSON.parse(localStorage.getItem('key')) || [],
@@ -5,18 +6,18 @@ const ELEMENTS = {
     // радио кнопки
     presetContainer: document.querySelector('.choiceOfResponseStyle'),
     allRadioButtons: document.querySelectorAll('.js-radioButton'),
-    withoutStyle: document.querySelector('.js-withoutStyle').textContent,
-    customPresetRadioButton: document.querySelector('.js-custom-preset-option'),
+    noPresetOption: document.querySelector('.js-withoutStyle').textContent,
+    customPresetInputWrapper: document.querySelector('.js-custom-preset-input-wrapper'),
     labelForSelfAssignmentRole: document.querySelector('.js-input'),
 
     //инпут
     customPresetInput: document.querySelector('.js-custom-preset-input'),
 
     // кнопка отправить форму
-    sendingPrompt: document.querySelector('.submit'),
+    submitPromptButton: document.querySelector('.submit'),
 
     // контейнер для верстки
-    container: document.querySelector('.dialog'),
+    dialogContainer: document.querySelector('.dialog'),
 };
 
 // объявляем глобальную переменную - стиль ответа
@@ -24,9 +25,9 @@ let role = '';
 
 // делаем инпут активным при выборе радио кнопки
 (function initActiveInput() {
-    const { customPresetRadioButton, customPresetInput } = ELEMENTS;
+    const { customPresetInputWrapper, customPresetInput } = ELEMENTS;
 
-    customPresetRadioButton.addEventListener('change', () => {
+    customPresetInputWrapper.addEventListener('change', () => {
         customPresetInput.disabled = false;
     })
 })();
@@ -51,17 +52,17 @@ let role = '';
 
 // событие при нажатии на кнопку - отправление запроса
 (function initSendPrompt() {
-    const { sendingPrompt } = ELEMENTS;
-    sendingPrompt.addEventListener('click', sendPrompt);
+    const { submitPromptButton } = ELEMENTS;
+    submitPromptButton.addEventListener('click', sendPrompt);
 })();
 
 async function sendPrompt() {
-    const { withoutStyle, restoredMessages } = ELEMENTS;
+    const { noPresetOption, restoredMessages } = ELEMENTS;
 
     const rawPrompt = document.querySelector('.textarea').value;
     let prompt;
 
-    if (role === withoutStyle || !role) {
+    if (role === noPresetOption || !role) {
         prompt = rawPrompt;
     } else prompt = `${rawPrompt}. Дай ответ как ${role}`;
 
@@ -70,7 +71,7 @@ async function sendPrompt() {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer "
+                "Authorization": "Bearer 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"
             },
 
             body: JSON.stringify({
@@ -113,20 +114,20 @@ function createObject(prompt, reply) {
 
 // добавляем верстку для вопросов и ответов 
 function addPromptsToLayout(arr) {
-    const { container } = ELEMENTS;
+    const { dialogContainer } = ELEMENTS;
     const singleMessage = document.createElement('div');
     singleMessage.className = 'js-singleMessage';
 
     for (let i = 0; i < arr.length; i += 1) {
         singleMessage.innerHTML = `<p class = 'word'>Prompt:</p><p class ='value'>${arr[i].question}</p><p class = 'word'>Response:</p><p class ='value'>${arr[i].answer}</p>`;
     }
-    container.prepend(singleMessage);
+    dialogContainer.prepend(singleMessage);
 }
 
 
 // добавляем верстку для элементов, сохраненных localStorage 
 (function showLayoutBeforeReboot() {
-    const { restoredMessages, container } = ELEMENTS;
+    const { restoredMessages, dialogContainer } = ELEMENTS;
 
     for (let i = restoredMessages.length - 1; i >= 0; i -= 1) {
 
@@ -135,7 +136,7 @@ function addPromptsToLayout(arr) {
 
         singleMessage.innerHTML = `<p class='word'>Prompt:</p><p class='value'>${restoredMessages[i].question}</p><p class='word'>Response:</p><p class='value'>${restoredMessages[i].answer}</p>`;
 
-        container.append(singleMessage);
+        dialogContainer.append(singleMessage);
     }
 })();
 
