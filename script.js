@@ -21,7 +21,11 @@ const ELEMENTS = {
 };
 
 // объявляем глобальную переменную - стиль ответа
-let role = '';
+const state = { role: '' };
+const setState = (nextRole) => {
+    state.role = nextRole
+}
+
 
 // делаем инпут активным при выборе радио кнопки
 (function initActiveInput() {
@@ -29,6 +33,7 @@ let role = '';
 
     customPresetInputWrapper.addEventListener('change', () => {
         customPresetInput.disabled = false;
+        customPresetInput.focus();
     })
 })();
 
@@ -36,17 +41,18 @@ let role = '';
 (function initCustomersRole() {
     const { customPresetInput } = ELEMENTS;
     customPresetInput.addEventListener('input', () => {
-        role = customPresetInput.value;
+        setState(customPresetInput.value);
     })
 })();
 
 // событие на остальных радио кнопках (кроме поля назначения пользователем стиля ответа)
 (function initRoleOnOtherRadioButton() {
-    const { presetContainer } = ELEMENTS;
+    const { presetContainer, customPresetInput } = ELEMENTS;
     presetContainer.addEventListener('click', (event) => {
         let target = event.target;
         if (!target.classList.contains('js-preset-option')) return;
-        role = target.nextSibling.textContent;
+        setState(target.nextSibling.textContent);
+        customPresetInput.disabled = true;
     })
 })();
 
@@ -61,7 +67,7 @@ async function sendPrompt() {
 
     const rawPrompt = document.querySelector('.textarea').value;
 
-    const prompt = (role === noPresetOption || !role) ? rawPrompt : `${rawPrompt}. Дай ответ как ${role}`;
+    const prompt = (state.role === noPresetOption || !state.role) ? rawPrompt : `${rawPrompt}. Дай ответ как ${state.role}`;
 
     try {
         const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -81,7 +87,7 @@ async function sendPrompt() {
         const reply = await data.choices[0].message.content;
 
         //!!!!!!!!!! УДАЛИТЬ
-        console.log(`стиль: ${role}`);
+        console.log(`стиль: ${state.role}`);
         console.log(`question: ${rawPrompt}`);
         console.log(`prompt: ${prompt}`);
 
@@ -93,7 +99,7 @@ async function sendPrompt() {
         addPromptsToLayout(restoredMessages);
         resetInput();
         resetChecked();
-        resetRole();
+        setState('');
 
     } catch (error) {
         console.error('Error:', error);
@@ -151,9 +157,4 @@ function resetChecked() {
     for (let i = 0; i < allRadioButtons.length; i += 1) {
         allRadioButtons[i].checked = false;
     }
-}
-
-// выбранный стиль ответа 
-function resetRole() {
-    role = '';
 }
