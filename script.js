@@ -1,4 +1,3 @@
-
 const ELEMENTS = {
     // создаем массив или получаем массив из localStorage
     restoredMessages: JSON.parse(localStorage.getItem('key')) || [],
@@ -25,7 +24,6 @@ const state = { role: '' };
 const setState = (nextRole) => {
     state.role = nextRole
 }
-
 
 // делаем инпут активным при выборе радио кнопки
 (function initActiveInput() {
@@ -63,47 +61,49 @@ const setState = (nextRole) => {
 })();
 
 async function sendPrompt() {
-    const { noPresetOption, restoredMessages } = ELEMENTS;
-
+    const { noPresetOption } = ELEMENTS;
     const rawPrompt = document.querySelector('.textarea').value;
-
     const prompt = (state.role === noPresetOption || !state.role) ? rawPrompt : `${rawPrompt}. Дай ответ как ${state.role}`;
 
     try {
-        const response = await fetch("https://api.openai.com/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer "
-            },
-
-            body: JSON.stringify({
-                "model": "gpt-3.5-turbo",
-                "messages": [{ "role": "user", "content": prompt }],
-                "temperature": 0.7
-            })
-        });
-        const data = await response.json();
-        const reply = await data.choices[0].message.content;
+        const reply = await createRequest(prompt);
 
         //!!!!!!!!!! УДАЛИТЬ
         console.log(`стиль: ${state.role}`);
         console.log(`question: ${rawPrompt}`);
         console.log(`prompt: ${prompt}`);
 
-        createObject(prompt, reply);
-
-        // переводим массив в строчный вид и сoздаем localStorage
-        localStorage.setItem('key', JSON.stringify(restoredMessages));
-
-        addPromptsToLayout(restoredMessages);
-        resetInput();
-        resetChecked();
-        setState('');
+        addReceivedDataToPage(prompt, reply);
 
     } catch (error) {
         console.error('Error:', error);
     }
+}
+
+async function createRequest(prompt) {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer "
+        },
+
+        body: JSON.stringify({
+            "model": "gpt-3.5-turbo",
+            "messages": [{ "role": "user", "content": prompt }],
+            "temperature": 0.7
+        })
+    });
+    const data = await response.json();
+    return data.choices[0].message.content;
+}
+
+function addReceivedDataToPage(prompt, reply) {
+    const { restoredMessages } = ELEMENTS;
+    createObject(prompt, reply);
+    addPromptsToLayout(restoredMessages);
+    resetInput();
+    resetChecked();
 }
 
 function createObject(prompt, reply) {
@@ -117,7 +117,11 @@ function createObject(prompt, reply) {
 
 // добавляем верстку для вопросов и ответов 
 function addPromptsToLayout(arr) {
-    const { dialogContainer } = ELEMENTS;
+    const { dialogContainer, restoredMessages } = ELEMENTS;
+
+    // переводим массив в строчный вид и сoздаем localStorage
+    localStorage.setItem('key', JSON.stringify(restoredMessages));
+
     const singleMessage = document.createElement('div');
     singleMessage.className = 'js-singleMessage';
 
@@ -147,6 +151,7 @@ function addPromptsToLayout(arr) {
 
 // назначенный пользователем стиль ответа
 function resetInput() {
+    setState('');
     const { labelForSelfAssignmentRole } = ELEMENTS;
     labelForSelfAssignmentRole.innerHTML = "<input class = 'js-custom-preset-input' type= 'text' placeholder='Введите свой тест' disabled='true'>";
 }
