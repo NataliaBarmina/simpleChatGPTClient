@@ -1,3 +1,5 @@
+
+
 const ELEMENTS = {
     // создаем массив или получаем массив из localStorage
     restoredMessages: JSON.parse(localStorage.getItem('key')) || [],
@@ -26,25 +28,25 @@ const setState = (nextRole) => {
 }
 
 // делаем инпут активным при выборе радио кнопки
-(function initActiveInput() {
+function initActiveInput() {
     const { customPresetInputWrapper, customPresetInput } = ELEMENTS;
 
     customPresetInputWrapper.addEventListener('change', () => {
         customPresetInput.disabled = false;
         customPresetInput.focus();
     })
-})();
+};
 
 // находим role при вводе пользователем своего значения 
-(function initCustomersRole() {
+function initCustomersRole() {
     const { customPresetInput } = ELEMENTS;
     customPresetInput.addEventListener('input', () => {
         setState(customPresetInput.value);
     })
-})();
+};
 
 // событие на остальных радио кнопках (кроме поля назначения пользователем стиля ответа)
-(function initRoleOnOtherRadioButton() {
+function initRoleOnOtherRadioButton() {
     const { presetContainer, customPresetInput } = ELEMENTS;
     presetContainer.addEventListener('click', (event) => {
         let target = event.target;
@@ -52,13 +54,13 @@ const setState = (nextRole) => {
         setState(target.nextSibling.textContent);
         customPresetInput.disabled = true;
     })
-})();
+};
 
 // событие при нажатии на кнопку - отправление запроса
-(function initSendPrompt() {
+function initSendPrompt() {
     const { submitPromptButton } = ELEMENTS;
     submitPromptButton.addEventListener('click', sendPrompt);
-})();
+};
 
 async function sendPrompt() {
     const { noPresetOption } = ELEMENTS;
@@ -133,7 +135,7 @@ function addPromptsToLayout(arr) {
 
 
 // добавляем верстку для элементов, сохраненных localStorage 
-(function showLayoutBeforeReboot() {
+function initShowLayoutBeforeReboot() {
     const { restoredMessages, dialogContainer } = ELEMENTS;
 
     for (let i = restoredMessages.length - 1; i >= 0; i -= 1) {
@@ -145,7 +147,7 @@ function addPromptsToLayout(arr) {
 
         dialogContainer.append(singleMessage);
     }
-})();
+};
 
 //! ПОСЛЕ ОТПРАВКИ ПРОМПТА УБИРАЕМ:
 
