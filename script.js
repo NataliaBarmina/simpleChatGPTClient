@@ -100,13 +100,13 @@ async function createRequest(prompt) {
 
 function addReceivedDataToPage(prompt, reply) {
     const { restoredMessages } = ELEMENTS;
-    createObject(prompt, reply);
+    getPromptAnswerCouple(prompt, reply);
     addPromptsToLayout(restoredMessages);
     resetInput();
     resetChecked();
 }
 
-function createObject(prompt, reply) {
+function getPromptAnswerCouple(prompt, reply) {
     const { restoredMessages } = ELEMENTS;
     const object = {
         question: prompt,
