@@ -105,7 +105,7 @@ h6 {
     align-items: end;
 }
 
-.js-singleMessage,
+.singleMessage,
 .textarea,
 .choiceOfResponseStyle {
     width: 55rem;
@@ -122,18 +122,21 @@ h1 {
     padding-bottom: 2rem;
 }
 
-.userStyleAnswer,
 .styleAnswer {
     display: block;
     padding-bottom: 1rem;
+}
+
+.userStyleAnswer {
+    display: inline-block;
 }
 
 .presetValueContainer {
     padding-left: 1rem;
 }
 
-.js-custom-preset-input {
-    padding-left: 1rem;
+.customPresetInput {
+    padding-left: 0.5rem;
     background-color: rgb(226, 247, 240);
     font-size: 1.4rem;
 }
@@ -165,6 +168,6 @@ h1 {
     background-color: aquamarine;
 }
 
-.js-singleMessage {
+.singleMessage {
     background-color: yellowgreen;
 }

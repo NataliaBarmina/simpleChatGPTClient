@@ -8,11 +8,11 @@ const ELEMENTS = {
     presetContainer: document.querySelector('.choiceOfResponseStyle'),
     allRadioButtons: document.querySelectorAll('.js-radioButton'),
     noPresetOption: document.querySelector('.js-withoutStyle').textContent,
+    customPresetOption: document.querySelector('.js-custom-preset-option'),
     customPresetInputWrapper: document.querySelector('.js-custom-preset-input-wrapper'),
-    labelForSelfAssignmentRole: document.querySelector('.js-input'),
-
+    // customPresetInputWrapper
     //инпут
-    customPresetInput: document.querySelector('.js-custom-preset-input'),
+    customPresetInput: document.querySelector('.customPresetInput'),
 
     // кнопка отправить форму
     submitPromptButton: document.querySelector('.submit'),
@@ -29,9 +29,9 @@ const setState = (nextRole) => {
 
 // делаем инпут активным при выборе радио кнопки
 function initActiveInput() {
-    const { customPresetInputWrapper, customPresetInput } = ELEMENTS;
+    const { customPresetOption, customPresetInput } = ELEMENTS;
 
-    customPresetInputWrapper.addEventListener('change', () => {
+    customPresetOption.addEventListener('change', () => {
         customPresetInput.disabled = false;
         customPresetInput.focus();
     })
@@ -125,7 +125,7 @@ function addPromptsToLayout(arr) {
     localStorage.setItem('key', JSON.stringify(restoredMessages));
 
     const singleMessage = document.createElement('div');
-    singleMessage.className = 'js-singleMessage';
+    singleMessage.className = 'singleMessage';
 
     for (let i = 0; i < arr.length; i += 1) {
         singleMessage.innerHTML = `<p class = 'word'>Prompt:</p><p class ='value'>${arr[i].question}</p><p class = 'word'>Response:</p><p class ='value'>${arr[i].answer}</p>`;
@@ -141,7 +141,7 @@ function initShowLayoutBeforeReboot() {
     for (let i = restoredMessages.length - 1; i >= 0; i -= 1) {
 
         const singleMessage = document.createElement('div');
-        singleMessage.className = 'js-singleMessage';
+        singleMessage.className = 'singleMessage';
 
         singleMessage.innerHTML = `<p class='word'>Prompt:</p><p class='value'>${restoredMessages[i].question}</p><p class='word'>Response:</p><p class='value'>${restoredMessages[i].answer}</p>`;
 
@@ -154,8 +154,8 @@ function initShowLayoutBeforeReboot() {
 // назначенный пользователем стиль ответа
 function resetInput() {
     setState('');
-    const { labelForSelfAssignmentRole } = ELEMENTS;
-    labelForSelfAssignmentRole.innerHTML = "<input class = 'js-custom-preset-input' type= 'text' placeholder='Введите свой тест' disabled='true'>";
+    const { customPresetInputWrapper } = ELEMENTS;
+    customPresetInputWrapper.innerHTML = "<input class = 'customPresetInput' type= 'text' placeholder='Введите свой тест' disabled='true'>";
 }
 
 // выбор радиокнопки
