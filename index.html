@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+    <form>
+        <p class="header">РАБОТА С ИСКУССТВЕННЫМ ИНТЕЛЛЕКТОМ</p>
+        <div id="cont" class="container">
+            <textarea class="textarea" placeholder="Введите свой вопрос" required></textarea>
+
+            <div class="choiceOfResponseStyle">
+                <h1>ВЫБЕРИТЕ ВАРИАНТЫ СТИЛЯ ОТВЕТА</h1>
+                <label class='styleAnswer'>
+                    <input class='js-preset-option js-radioButton' type="radio" name='name'>
+                    <span class="presetValueContainer">Браток из 90-х</span>
+                </label>
+                <label class='styleAnswer'>
+                    <input class='js-preset-option js-radioButton' type="radio" name='name'>
+                    <span class="presetValueContainer">Профессор философии</span>
+                </label>
+                <label class='styleAnswer'>
+                    <input class='js-preset-option js-radioButton' type="radio" name='name'>
+                    <span class="presetValueContainer">Есенин, в стихах</span>
+                </label>
+                <label class='styleAnswer'>
+                    <input class='js-preset-option js-radioButton' type="radio" name='name'>
+                    <span class="presetValueContainer">Stand-up комик</span>
+                </label>
+                <label class='styleAnswer'>
+                    <input class='js-preset-option js-radioButton' type="radio" name='name'>
+                    <span class="presetValueContainer js-withoutStyle">Без стиля</span>
+                </label>
+
+                <label class='userStyleAnswer'>
+                    <input class="js-custom-preset-option js-radioButton" type="radio" name='name'>
+                </label>
+                <label class="js-custom-preset-input-wrapper">
+                    <input class="customPresetInput" type="text" placeholder="Введите свой текст" disabled='true'>
+                </label>
+            </div>
+            <input class="submit" type="button" value="Отправить">
+            <div class="dialog"></div>
+        </div>
+    </form>
+    <script src="./script.js"></script>
+    <script src="./index.js"></script>
+
+</body>
+
+</html>

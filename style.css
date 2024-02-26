@@ -1,0 +1,173 @@
+/*! Обнуление*/
+* {
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+*,
+*:before,
+*:after {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+:focus,
+:active {
+    outline: none;
+}
+
+a:focus,
+a:active {
+    outline: none;
+}
+
+nav,
+footer,
+header,
+aside {
+    display: block;
+}
+
+html,
+body {
+    height: 100%;
+    font-size: 100%;
+    line-height: 1;
+    font-size: 14px;
+    -ms-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    font-family: Montserrat;
+}
+
+input,
+button,
+textarea {
+    font-family: inherit;
+}
+
+input::-ms-clear {
+    display: none;
+}
+
+button {
+    cursor: pointer;
+}
+
+button::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+}
+
+a,
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+ul li {
+    list-style: none;
+}
+
+img {
+    vertical-align: top;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: inherit;
+    font-weight: 400;
+}
+
+/*--------------------*/
+
+.header {
+    margin-top: 3rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    font-size: 3rem;
+}
+
+.container {
+    margin: 0 auto;
+    width: 55rem;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+.singleMessage,
+.textarea,
+.choiceOfResponseStyle {
+    width: 55rem;
+    border: 1px solid grey;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    font-size: 1.4rem;
+    background-color: rgb(226, 247, 240);
+    padding: 2rem;
+}
+
+h1 {
+    padding-bottom: 2rem;
+}
+
+.styleAnswer {
+    display: block;
+    padding-bottom: 1rem;
+}
+
+.userStyleAnswer {
+    display: inline-block;
+}
+
+.presetValueContainer {
+    padding-left: 1rem;
+}
+
+.customPresetInput {
+    padding-left: 1rem;
+    background-color: rgb(226, 247, 240);
+    font-size: 1.4rem;
+}
+
+.submit {
+    background-color: rgb(233, 248, 243);
+    border: 1px solid grey;
+    border-radius: 10px;
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+.word {
+    width: 20%;
+    display: inline-block;
+    font-weight: 800;
+    vertical-align: top;
+}
+
+.value {
+    width: 80%;
+    display: inline-block;
+    margin-bottom: 2rem;
+}
+
+.replyContainer {
+    background-color: aquamarine;
+}
+
+.singleMessage {
+    background-color: yellowgreen;
+}
