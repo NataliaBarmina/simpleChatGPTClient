@@ -25,7 +25,7 @@ const setState = (nextRole) => {
     state.role = nextRole
 }
 
-// делаем инпут активным при выборе радио кнопки
+// делаем инпут активным при выборе радио кнопки и находим role при вводе пользователем своего значения 
 function initCustomRole() {
     const { customPresetOption, customPresetInput } = ELEMENTS;
 
@@ -33,11 +33,6 @@ function initCustomRole() {
         customPresetInput.disabled = false;
         customPresetInput.focus();
     })
-};
-
-// находим role при вводе пользователем своего значения 
-function initCustomersRole() {
-    const { customPresetInput } = ELEMENTS;
     customPresetInput.addEventListener('input', () => {
         setState(customPresetInput.value);
     })
@@ -85,7 +80,7 @@ async function createRequest(prompt) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer "
+            "Authorization": "Bearer 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"
         },
 
         body: JSON.stringify({
