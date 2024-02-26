@@ -85,7 +85,7 @@ async function createRequest(prompt) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer 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"
+            "Authorization": "Bearer "
         },
 
         body: JSON.stringify({
@@ -100,19 +100,20 @@ async function createRequest(prompt) {
 
 function addReceivedDataToPage(prompt, response) {
     const { restoredMessages } = ELEMENTS;
-    getPromptAnswerCouple(prompt, response);
+    const couple = getPromptAnswerCouple(prompt, response);
+    restoredMessages.push(couple);
+
     addPromptsToLayout(restoredMessages);
+
     resetInput();
     resetChecked();
 }
 
 function getPromptAnswerCouple(prompt, response) {
-    const { restoredMessages } = ELEMENTS;
-    const object = {
+    return object = {
         question: prompt,
         answer: response,
     }
-    restoredMessages.push(object);
 }
 
 // добавляем верстку для вопросов и ответов 
