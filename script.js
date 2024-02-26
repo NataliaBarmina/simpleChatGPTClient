@@ -80,7 +80,7 @@ async function createRequest(prompt) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer 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"
+            "Authorization": "Bearer "
         },
 
         body: JSON.stringify({
@@ -98,6 +98,8 @@ function addReceivedDataToPage(prompt, response) {
     const couple = getPromptAnswerCouple(prompt, response);
     restoredMessages.push(couple);
 
+    // переводим массив в строчный вид и сoздаем localStorage
+    localStorage.setItem('key', JSON.stringify(restoredMessages));
     addPromptsToLayout(restoredMessages);
 
     resetInput();
@@ -114,9 +116,6 @@ function getPromptAnswerCouple(prompt, response) {
 // добавляем верстку для вопросов и ответов 
 function addPromptsToLayout(arr) {
     const { dialogContainer, restoredMessages } = ELEMENTS;
-
-    // переводим массив в строчный вид и сoздаем localStorage
-    localStorage.setItem('key', JSON.stringify(restoredMessages));
 
     const singleMessage = document.createElement('div');
     singleMessage.className = 'singleMessage';
