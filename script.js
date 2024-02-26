@@ -1,5 +1,3 @@
-
-
 const ELEMENTS = {
     // создаем массив или получаем массив из localStorage
     restoredMessages: JSON.parse(localStorage.getItem('key')) || [],
@@ -28,7 +26,7 @@ const setState = (nextRole) => {
 }
 
 // делаем инпут активным при выборе радио кнопки
-function initActiveInput() {
+function initCustomRole() {
     const { customPresetOption, customPresetInput } = ELEMENTS;
 
     customPresetOption.addEventListener('change', () => {
@@ -46,10 +44,10 @@ function initCustomersRole() {
 };
 
 // событие на остальных радио кнопках (кроме поля назначения пользователем стиля ответа)
-function initRoleOnOtherRadioButton() {
+function initDefaultRoles() {
     const { presetContainer, customPresetInput } = ELEMENTS;
     presetContainer.addEventListener('click', (event) => {
-        let target = event.target;
+        const target = event.target;
         if (!target.classList.contains('js-preset-option')) return;
         setState(target.nextSibling.textContent);
         customPresetInput.disabled = true;
@@ -68,14 +66,14 @@ async function sendPrompt() {
     const prompt = (state.role === noPresetOption || !state.role) ? rawPrompt : `${rawPrompt}. Дай ответ как ${state.role}`;
 
     try {
-        const reply = await createRequest(prompt);
+        const response = await createRequest(prompt);
 
         //!!!!!!!!!! УДАЛИТЬ
         console.log(`стиль: ${state.role}`);
         console.log(`question: ${rawPrompt}`);
         console.log(`prompt: ${prompt}`);
 
-        addReceivedDataToPage(prompt, reply);
+        addReceivedDataToPage(prompt, response);
 
     } catch (error) {
         console.error('Error:', error);
@@ -87,7 +85,7 @@ async function createRequest(prompt) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer "
+            "Authorization": "Bearer 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"
         },
 
         body: JSON.stringify({
@@ -100,19 +98,19 @@ async function createRequest(prompt) {
     return data.choices[0].message.content;
 }
 
-function addReceivedDataToPage(prompt, reply) {
+function addReceivedDataToPage(prompt, response) {
     const { restoredMessages } = ELEMENTS;
-    getPromptAnswerCouple(prompt, reply);
+    getPromptAnswerCouple(prompt, response);
     addPromptsToLayout(restoredMessages);
     resetInput();
     resetChecked();
 }
 
-function getPromptAnswerCouple(prompt, reply) {
+function getPromptAnswerCouple(prompt, response) {
     const { restoredMessages } = ELEMENTS;
     const object = {
         question: prompt,
-        answer: reply,
+        answer: response,
     }
     restoredMessages.push(object);
 }
@@ -135,7 +133,7 @@ function addPromptsToLayout(arr) {
 
 
 // добавляем верстку для элементов, сохраненных localStorage 
-function initShowLayoutBeforeReboot() {
+function showPreviousDialogs() {
     const { restoredMessages, dialogContainer } = ELEMENTS;
 
     for (let i = restoredMessages.length - 1; i >= 0; i -= 1) {

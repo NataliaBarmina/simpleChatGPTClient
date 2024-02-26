@@ -1,7 +1,7 @@
 (function initApp() {
-    initActiveInput();
+    initCustomRole();
     initCustomersRole();
-    initRoleOnOtherRadioButton();
+    initDefaultRoles();
     initSendPrompt();
-    initShowLayoutBeforeReboot();
+    showPreviousDialogs();
 })();
