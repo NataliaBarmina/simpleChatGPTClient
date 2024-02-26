@@ -44,7 +44,8 @@ function initDefaultRoles() {
     presetContainer.addEventListener('click', (event) => {
         const target = event.target;
         if (!target.classList.contains('js-preset-option')) return;
-        setState(target.nextSibling.textContent);
+
+        setState(target.parentElement.querySelector('.presetValueContainer').textContent);
         customPresetInput.disabled = true;
     })
 };
@@ -62,11 +63,6 @@ async function sendPrompt() {
 
     try {
         const response = await createRequest(prompt);
-
-        //!!!!!!!!!! УДАЛИТЬ
-        console.log(`стиль: ${state.role}`);
-        console.log(`question: ${rawPrompt}`);
-        console.log(`prompt: ${prompt}`);
 
         addReceivedDataToPage(prompt, response);
 
